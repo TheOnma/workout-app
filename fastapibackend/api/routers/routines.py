@@ -33,3 +33,11 @@ def create_routine(db: db_dependency, user: user_dependency, routine: RoutineCre
   db.refresh(db_routine)
   db_routines = db.query(Routine).options(joinedload(Routine.workouts)).filter(Routine.id == db_routine.id).first()
   return db_routines
+
+@router.delete('/')
+def delete_routine(db: db_dependency, user: user_dependency, routine_id: int):
+  db_routine = db.query(Routine).filter(Routine.id == routine_id).first()
+  if db_routine:
+    db.delete(db_routine)
+    db.commit()
+  return db_routine
