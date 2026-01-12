@@ -9,3 +9,14 @@ router = APIRouter(
   prefix='/routines',
   tags=['routines']
 )
+
+class RoutineBase(BaseModel):
+  name: str
+  description: Optional[str] = None
+
+class RoutineCreate(RoutineBase):
+  workouts: List[int] = []
+
+@router.get('/')
+def get_routines(db: db_dependency, user: user_dependency):
+  return db.query(Routine).options(joinedload(Routine.workouts)).filter(Routine.user_id == user.get('id')).all()
