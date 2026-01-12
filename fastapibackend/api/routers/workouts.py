@@ -33,3 +33,11 @@ def create_workout(db: db_dependency, user: user_dependency, workout: WorkoutCre
   db.refresh(db_workout)
   return db_workout
 
+@router.delete("/")
+def delete_workout(db: db_dependency, user: user_dependency, workout_id: int):
+  db_workout = db.query(Workout).filter(Workout.id == workout_id).first()
+  if db_workout:
+    db.delete(db_workout)
+    db.commit()
+  return db_workout
+
